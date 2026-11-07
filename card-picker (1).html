@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Card Picker">
+<meta name="theme-color" content="#000000">
+<title>Card Picker</title>
+<style>:root{--bg:#000;--sf:#1c1c1e;--sf2:#2c2c2e;--tx:#f5f5f7;--sub:#8e8e93;--ln:#2f2f32;--ac:#5b9bff;--dg:#ff6259;--nv:rgba(24,24,26,.82);color-scheme:dark}
+:root[data-t="light"]{--bg:#f2f2f7;--sf:#fff;--sf2:#eeeef3;--tx:#111114;--sub:#6c6c70;--ln:#e1e1e6;--ac:#0a5fd8;--dg:#d70015;--nv:rgba(249,249,251,.85);color-scheme:light}
+@media(prefers-color-scheme:light){:root[data-t="system"]{--bg:#f2f2f7;--sf:#fff;--sf2:#eeeef3;--tx:#111114;--sub:#6c6c70;--ln:#e1e1e6;--ac:#0a5fd8;--dg:#d70015;--nv:rgba(249,249,251,.85);color-scheme:light}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--tx);font:15px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;-webkit-font-smoothing:antialiased;overscroll-behavior:none;padding-top:env(safe-area-inset-top)}
+#app{height:100%;display:flex;flex-direction:column;max-width:560px;margin:0 auto}
+main{flex:1;overflow-y:auto;padding:8px 16px 28px;-webkit-overflow-scrolling:touch}
+h1{font-size:32px;font-weight:700;margin:10px 2px 14px;letter-spacing:-.025em}
+h2{font-size:13px;font-weight:600;color:var(--sub);margin:24px 8px 8px;letter-spacing:.01em}
+input,select,button{font:inherit;color:inherit}
+input,select{-webkit-appearance:none;appearance:none;width:100%;min-width:0;font-size:16px;background:var(--sf2);border:0;border-radius:10px;padding:11px 12px;outline:none}
+input:focus-visible,button:focus-visible{box-shadow:0 0 0 2px var(--ac)}
+button{border:0;background:var(--sf2);border-radius:12px;padding:11px 16px;min-height:44px;cursor:pointer;font-weight:500;transition:opacity .15s,transform .1s}
+button:active{opacity:.65;transform:scale(.985)}
+.pri{background:var(--ac);color:#fff;font-weight:600}
+:root[data-t="dark"] .pri{color:#041126}
+.dng{color:var(--dg)}
+.row{display:flex;gap:8px;align-items:center}
+.grp{background:var(--sf);border-radius:14px;padding:2px 14px;border:1px solid var(--ln)}
+.grp .row{padding:4px 0;min-height:48px}
+.grp .row+.row{border-top:1px solid var(--ln)}
+.grp .row input{background:transparent;padding:10px 2px;border-radius:8px}
+.grp .row input:focus{background:var(--sf2);box-shadow:none}
+.fl{width:84px;flex:none;color:var(--sub)}
+.lst{padding:0 14px}
+.lst button{display:block;width:100%;text-align:left;background:none;border-radius:0;padding:14px 0;color:var(--ac)}
+.lst button~button{border-top:1px solid var(--ln)}
+.lst button.dng{color:var(--dg)}
+.bar input{padding:14px 14px 14px 42px;font-size:17px;border-radius:14px;background:var(--sf) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238e8e93' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='11' cy='11' r='6.5'/%3E%3Cpath d='M16 16l4.5 4.5'/%3E%3C/svg%3E") no-repeat 13px center/20px;border:1px solid var(--ln)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:var(--sf);border:1px solid var(--ln);border-radius:999px;padding:8px 14px;min-height:36px;font-size:14px}
+.res{display:block;width:100%;text-align:left;border-radius:14px;padding:17px 16px;margin:10px 0 0;color:#fff;font-weight:600;font-size:15.5px;letter-spacing:-.005em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border:1px solid rgba(255,255,255,.12);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 4px 14px -6px rgba(0,0,0,.5)}
+.res.chase{background:linear-gradient(135deg,#0a1f58,#16399a)}
+.res.cap{background:linear-gradient(135deg,#650c17,#9c1628)}
+.res.citi{background:linear-gradient(135deg,#34373c,#686d75)}
+.res.oth{background:linear-gradient(135deg,#26262a,#46464b)}
+.cd{display:flex;align-items:center;gap:12px;width:100%;text-align:left;margin:0 0 10px;padding:14px 14px 14px 18px;border-radius:14px;background:var(--sf);border:1px solid var(--ln);position:relative;overflow:hidden;font-weight:400}
+.cd:before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--k)}
+.cd.chase{--k:#1f4bc4}.cd.cap{--k:#b3192e}.cd.citi{--k:#8c929b}.cd.oth{--k:#5a5a60}
+.cd b{display:block;font-size:16px;font-weight:600}
+.cd small{color:var(--sub);font-size:13px}
+.cd i{margin-left:auto;font-style:normal;color:var(--sub);font-size:20px}
+.note{color:var(--sub);text-align:center;padding:22px 14px;font-size:14px}
+.seg{display:flex;background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:3px}
+.seg button{flex:1;background:none;border-radius:9px;min-height:38px;padding:6px}
+.seg button.on{background:var(--sf2);font-weight:600}
+nav{display:flex;background:var(--nv);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--ln);padding:6px 12px calc(6px + env(safe-area-inset-bottom))}
+nav button{flex:1;background:none;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:500;color:var(--sub);padding:6px 0;min-height:50px;border-radius:10px}
+nav button svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button.on{color:var(--ac)}
+.sheet{position:fixed;inset:0;background:var(--bg);z-index:5;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);max-width:560px;margin:0 auto}
+.sheet header{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:6px 10px;border-bottom:1px solid var(--ln)}
+.sheet header button{background:none;color:var(--ac);padding:8px 6px;justify-self:start}
+.sheet header span{justify-self:end;color:var(--sub);font-size:12px;padding-right:6px}
+.sheet main{padding-top:4px}
+.cat{flex-wrap:wrap;row-gap:0;padding:6px 0!important}.cat>input:first-child{order:1;flex:1 1 calc(100% - 52px);font-weight:500}.cat>.x{order:2}.cat>.lb{order:3;flex:1;width:auto;color:var(--sub);font-size:15px}.cat>.sm{order:4}.cat>span{order:5}
+.sm{width:64px;flex:none;text-align:right}
+.x{flex:none;background:none;color:var(--sub);font-size:16px;padding:0 6px;min-height:40px;width:36px}
+</style>
+</head>
+<body>
+<div id="app"><main id="main"></main>
+<nav id="nav"></nav></div>
+<script>
+(function(){
+var KEY='cardpicker.v2';
+var uid=function(){return Math.random().toString(36).slice(2,9)};
+function C(n,i,f,c){return{id:uid(),name:n,issuer:i,fee:f,cats:c.map(function(x){var o={n:x[0],v:x[1]};if(x[2])o.label=x[2];return o})}}
+function defaults(){
+ return{theme:'dark',recents:[],
+ cards:[
+  C('Chase Sapphire Preferred','Chase',95,[['Dining',3],['Online Groceries',3],['Streaming',3],['Travel',5,'Chase Travel'],['Travel',2,'Non-Chase Travel']]),
+  C('Chase Freedom Flex','Chase',0,[['Dining',3],['Travel',5,'Chase Travel']]),
+  C('Chase Freedom Unlimited','Chase',0,[['Dining',3],['Travel',5,'Chase Travel']]),
+  C('Capital One Savor','Capital One',0,[['Dining',3],['Grocery Stores',3],['Streaming',3],['Travel',5,'Capital One Travel']]),
+  C('Citi Costco Visa','Citi',0,[['Dining',3],['Gas Stations',4],['Costco Gas',5],['Travel',3,'Eligible Travel']]),
+  C('Amazon Visa','Chase',0,[['Dining',2],['Gas Stations',2],['Travel',3,'Chase Travel']]),
+  C('Southwest Rapid Rewards','Chase',0,[['Gas Stations',2],['Grocery Stores',2]])
+ ],
+ maps:[['Ralphs','Grocery Stores'],['Vons','Grocery Stores'],['Whole Foods','Grocery Stores'],['Trader Joes','Grocery Stores'],['Instacart','Online Groceries'],['Netflix','Streaming'],['Spotify','Streaming'],['Hulu','Streaming'],['Costco Gas','Costco Gas'],['Shell','Gas Stations'],['Chevron','Gas Stations'],['Hilton','Travel'],['Marriott','Travel'],['Restaurant','Dining'],['Starbucks','Dining'],['Chipotle','Dining'],['Uber Eats','Dining'],['Delta','Travel'],['United','Travel'],['Airbnb','Travel']].map(function(a){return{id:uid(),m:a[0],c:a[1]}})};
+}
+var S;
+try{S=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+if(!S||!Array.isArray(S.cards)||!Array.isArray(S.maps))S=defaults();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function h(t,p,k){var e=document.createElement(t);p=p||{};for(var a in p){if(a==='on')for(var v in p.on)e.addEventListener(v,p.on[v]);else if(a==='cls')e.className=p[a];else if(a==='txt')e.textContent=p[a];else e[a]=p[a];}
+ (k||[]).forEach(function(c){if(c!=null)e.appendChild(typeof c==='string'?document.createTextNode(c):c)});return e}
+var ICON={search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>',cards:'<svg viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M3 10h18M6.5 15h3"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M4 7h9M19 7h1M4 17h1M11 17h9"/><circle cx="16" cy="7" r="2.5"/><circle cx="8" cy="17" r="2.5"/></svg>'};
+var $=function(id){return document.getElementById(id)};
+var tab='search',query='',main=$('main');
+
+function applyTheme(){document.documentElement.setAttribute('data-t',S.theme||'dark')}
+function norm(s){return String(s||'').toLowerCase().replace(/[^a-z0-9 ]/g,' ').replace(/\s+/g,' ').trim()}
+function lev(a,b){var m=a.length,n=b.length,d=[],i,j;for(i=0;i<=m;i++){d[i]=[i]}for(j=1;j<=n;j++)d[0][j]=j;
+ for(i=1;i<=m;i++)for(j=1;j<=n;j++)d[i][j]=Math.min(d[i-1][j]+1,d[i][j-1]+1,d[i-1][j-1]+(a[i-1]===b[j-1]?0:1));return d[m][n]}
+function allCats(){var s={};S.cards.forEach(function(c){c.cats.forEach(function(x){s[norm(x.n)]=x.n})});S.maps.forEach(function(m){s[norm(m.c)]=m.c});return s}
+
+// Resolve query -> category name (3 layers)
+function resolve(q){
+ q=norm(q);if(!q)return null;var cats=allCats(),i,m;
+ // Layer 1: merchant mappings
+ for(i=0;i<S.maps.length;i++){m=S.maps[i];if(norm(m.m)===q)return m.c}
+ var best=null;
+ for(i=0;i<S.maps.length;i++){m=S.maps[i];var k=norm(m.m);if(k.length>=3&&(q.indexOf(k)>-1||(q.length>=3&&k.indexOf(q)===0))){if(!best||k.length>best.l)best={c:m.c,l:k.length}}}
+ if(best)return best.c;
+ // Layer 2: direct category match
+ if(cats[q])return cats[q];
+ var sing=q.replace(/s$/,'');if(cats[sing])return cats[sing];
+ for(var key in cats){if(key.length>=3&&q.length>=3&&(key.indexOf(q)===0||q.indexOf(key)>-1))return cats[key]}
+ // Layer 3: light fuzzy
+ var bd=99,bc=null,lim=Math.max(1,Math.floor(q.length/4));
+ S.maps.forEach(function(m){var d=lev(q,norm(m.m));if(d<bd){bd=d;bc=m.c}});
+ for(var k2 in cats){var d2=lev(q,k2);if(d2<bd){bd=d2;bc=cats[k2]}}
+ return bd<=lim?bc:null;
+}
+function prio(c){var n=norm(c.name),i=norm(c.issuer);if(n==='chase sapphire preferred')return 0;if(i==='chase')return 1;if(i==='capital one')return 2;if(i==='citi')return 3;return 4}
+function val(c,cat){var n=norm(cat),b=null;c.cats.forEach(function(x){if(norm(x.n)===n&&(!b||+x.v>b.v))b={v:+x.v,c:x.label||x.n}});return b}
+function rank(cat){var r=[];S.cards.forEach(function(c){var m=val(c,cat);if(m&&m.v>0)r.push({card:c,v:m.v,cat:m.c})});return r.sort(function(a,b){return b.v-a.v||prio(a.card)-prio(b.card)||a.card.name.localeCompare(b.card.name)}).slice(0,3)}
+function cls(c){var i=norm(c.issuer);return i==='chase'?'chase':i==='capital one'?'cap':i==='citi'?'citi':'oth'}
+var fmt=function(v){return (Math.round(v*100)/100)+'x'};
+
+function addRecent(q){q=q.trim();if(!q)return;S.recents=[q].concat(S.recents.filter(function(r){return r.toLowerCase()!==q.toLowerCase()})).slice(0,10);save()}
+
+// ---------- Search ----------
+function viewSearch(){
+ var inp=h('input',{type:'search',placeholder:'What are you buying?',value:query,autocapitalize:'words',autocomplete:'off',enterKeyHint:'search'});
+ var out=h('div'),extra=h('div');
+ function run(commit){
+  query=inp.value;out.innerHTML='';
+  if(!query.trim()){extra.style.display='';return}
+  extra.style.display='none';
+  var cat=resolve(query);
+  if(!cat){out.appendChild(h('div',{cls:'note',txt:'No match. Add a mapping in Settings.'}));return}
+  if(commit)addRecent(query);
+  var rk=rank(cat);if(!rk.length)out.appendChild(h('div',{cls:'note',txt:'No card has a bonus for '+cat+'.'}));
+  rk.forEach(function(r,i){out.appendChild(h('div',{cls:'res '+cls(r.card),txt:['🥇','🥈','🥉'][i]+' '+r.card.name+' | '+fmt(r.v)+' | '+r.cat}))});
+  if(!S.cards.length)out.appendChild(h('div',{cls:'note',txt:'No cards yet. Add one in Cards.'}));
+ }
+ inp.addEventListener('input',function(){run(false)});
+ inp.addEventListener('keydown',function(e){if(e.key==='Enter'){run(true);inp.blur()}});
+ inp.addEventListener('change',function(){run(true)});
+ var ex=h('div',{cls:'chips'},['Ralphs','Costco Gas','Restaurant','Netflix','Amazon'].map(function(t){return h('button',{cls:'chip',txt:t,on:{click:function(){inp.value=t;run(true)}}})}));
+ extra.appendChild(h('h2',{txt:'Try'}));extra.appendChild(ex);
+ if(S.recents.length){
+  extra.appendChild(h('h2',{txt:'Recent'}));
+  extra.appendChild(h('div',{cls:'chips'},S.recents.map(function(t){return h('button',{cls:'chip',txt:t,on:{click:function(){inp.value=t;run(true)}}})})));
+  extra.appendChild(h('button',{cls:'chip dng',txt:'Clear recent',on:{click:function(){S.recents=[];save();draw()}}}));
+ }
+ main.appendChild(h('h1',{txt:'Search'}));
+ main.appendChild(h('div',{cls:'bar'},[inp]));main.appendChild(out);main.appendChild(extra);
+ run(false);
+}
+
+// ---------- Cards ----------
+function viewCards(){
+ main.appendChild(h('h1',{txt:'Cards'}));
+ S.cards.forEach(function(c){
+  main.appendChild(h('button',{cls:'cd '+cls(c),on:{click:function(){editCard(c.id)}}},[h('div',{},[h('b',{txt:c.name||'Untitled'}),h('small',{txt:(c.issuer||'Other')+' · '+((+c.fee||0)?'$'+(+c.fee)+' annual fee':'No annual fee')+' · '+c.cats.length+' categories'})]),h('i',{txt:'›'})]));
+ });
+ if(!S.cards.length)main.appendChild(h('div',{cls:'note',txt:'No cards yet.'}));
+ main.appendChild(h('button',{cls:'pri',txt:'+ Add Card',style:'width:100%;margin-top:4px',on:{click:function(){var c={id:uid(),name:'New Card',issuer:'Other',fee:0,cats:[{n:'',v:1}]};S.cards.push(c);save();editCard(c.id)}}}));
+}
+function frow(l,i){return h('div',{cls:'row'},[h('span',{cls:'fl',txt:l}),i])}
+function editCard(id){
+ var c=S.cards.filter(function(x){return x.id===id})[0];if(!c)return;
+ var sh=h('div',{cls:'sheet'}),body=h('main');
+ function close(){sh.remove();draw()}
+ function build(){
+  body.innerHTML='';
+  var nm=h('input',{value:c.name,placeholder:'Card name'}),is=h('input',{value:c.issuer,placeholder:'Issuer'}),fe=h('input',{value:c.fee,type:'number',inputMode:'decimal',min:0});
+  is.setAttribute('list','iss');
+  nm.oninput=function(){c.name=nm.value;save()};is.oninput=function(){c.issuer=is.value;save()};fe.oninput=function(){c.fee=parseFloat(fe.value)||0;save()};
+  body.appendChild(h('div',{cls:'grp'},[frow('Name',nm),frow('Issuer',is),frow('Annual fee',fe)]));
+  
+  body.appendChild(h('datalist',{id:'iss'},['Chase','Capital One','Citi','American Express','Discover','Bank of America','Wells Fargo'].map(function(o){return h('option',{value:o})})));
+  
+  body.appendChild(h('h2',{txt:'Categories · label · reward rate'}));
+  var g=h('div',{cls:'grp'});
+  c.cats.forEach(function(x,i){
+   var n=h('input',{value:x.n,placeholder:'Category'}),lb=h('input',{cls:'lb',value:x.label||'',placeholder:'Label'}),v=h('input',{cls:'sm',value:x.v,type:'number',inputMode:'decimal',step:'any',min:0,placeholder:'x'});
+   n.oninput=function(){x.n=n.value;save()};lb.oninput=function(){if(lb.value.trim())x.label=lb.value;else delete x.label;save()};v.oninput=function(){x.v=parseFloat(v.value)||0;save()};
+   g.appendChild(h('div',{cls:'row cat'},[n,lb,v,h('span',{txt:'x',style:'color:var(--sub)'}),h('button',{cls:'x',txt:'✕',title:'Delete category',on:{click:function(){c.cats.splice(i,1);save();build()}}})]));
+  });
+  if(!c.cats.length)g.appendChild(h('div',{cls:'note',txt:'No categories.'}));
+  body.appendChild(g);
+  body.appendChild(h('button',{txt:'+ Add Category',style:'width:100%;margin-top:10px',on:{click:function(){c.cats.push({n:'',v:1});save();build()}}}));
+  body.appendChild(h('button',{cls:'dng',txt:'Delete Card',style:'width:100%;margin-top:22px',on:{click:function(){if(confirm('Delete '+(c.name||'this card')+'?')){S.cards=S.cards.filter(function(x){return x.id!==id});save();close()}}}}));
+ }
+ sh.appendChild(h('header',{},[h('button',{txt:'‹ Cards',on:{click:close}}),h('b',{txt:'Edit Card'}),h('span',{txt:'Autosaves'})]));
+ sh.appendChild(body);document.body.appendChild(sh);build();
+}
+
+// ---------- Settings ----------
+function viewSettings(){
+ main.appendChild(h('h1',{txt:'Settings'}));
+ main.appendChild(h('h2',{txt:'Merchant mapping'}));
+ var ma=h('input',{placeholder:'Merchant',autocapitalize:'words'}),mc=h('input',{placeholder:'Category',autocapitalize:'words'});
+ main.appendChild(h('div',{cls:'grp'},[h('div',{cls:'row'},[ma,mc,h('button',{cls:'pri',txt:'Add',style:'padding:8px 14px;min-height:38px;flex:none',on:{click:function(){var a=ma.value.trim(),b=mc.value.trim();if(!a||!b)return;S.maps.unshift({id:uid(),m:a,c:b});save();draw()}}})])]));
+ var g=h('div',{cls:'grp',style:'margin-top:10px'});
+ S.maps.forEach(function(m,i){
+  var a=h('input',{value:m.m}),b=h('input',{value:m.c});
+  a.oninput=function(){m.m=a.value;save()};b.oninput=function(){m.c=b.value;save()};
+  g.appendChild(h('div',{cls:'row'},[a,b,h('button',{cls:'x',txt:'✕',title:'Delete mapping',on:{click:function(){S.maps.splice(i,1);save();draw()}}})]));
+ });
+ if(!S.maps.length)g.appendChild(h('div',{cls:'note',txt:'No mappings.'}));
+ main.appendChild(g);
+ main.appendChild(h('h2',{txt:'Appearance'}));
+ main.appendChild(h('div',{cls:'seg'},[['dark','Dark'],['light','Light'],['system','System']].map(function(t){return h('button',{cls:S.theme===t[0]?'on':'',txt:t[1],on:{click:function(){S.theme=t[0];save();applyTheme();draw()}}})})));
+ main.appendChild(h('h2',{txt:'Data management'}));
+ var fi=h('input',{type:'file',accept:'application/json,.json',style:'display:none'});
+ fi.onchange=function(){var f=fi.files[0];if(!f)return;var r=new FileReader();
+  r.onload=function(){try{var d=JSON.parse(r.result);if(!d||!Array.isArray(d.cards)||!Array.isArray(d.maps))throw 0;
+   d.cards.forEach(function(c){c.id=c.id||uid();c.cats=Array.isArray(c.cats)?c.cats:[]});d.maps.forEach(function(m){m.id=m.id||uid()});
+   d.recents=Array.isArray(d.recents)?d.recents.slice(0,10):[];d.theme=d.theme||'dark';S=d;save();applyTheme();draw();alert('Import complete.')}catch(e){alert('Import failed. Choose a JSON file exported from this app.')}};
+  r.readAsText(f)};
+ main.appendChild(h('div',{cls:'grp lst'},[
+  h('button',{txt:'Export JSON',on:{click:function(){var b=new Blob([JSON.stringify(S,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=h('a',{href:u,download:'card-picker-'+new Date().toISOString().slice(0,10)+'.json'});document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u)},4000)}}}),
+  h('button',{txt:'Import JSON',on:{click:function(){fi.click()}}}),fi,
+  h('button',{cls:'dng',txt:'Reset Portfolio',on:{click:function(){if(confirm('Reset all cards, mappings and recents to defaults?')){var t=S.theme;S=defaults();S.theme=t;save();draw()}}}})
+ ]));
+}
+
+// ---------- Shell ----------
+function draw(){
+ var y=main.scrollTop;main.innerHTML='';
+ if(tab==='search')viewSearch();else if(tab==='cards')viewCards();else viewSettings();
+ var nav=$('nav');nav.innerHTML='';
+ [['search','⌕','Search'],['cards','▭','Cards'],['settings','⚙︎','Settings']].forEach(function(t){
+  nav.appendChild(h('button',{cls:tab===t[0]?'on':'',on:{click:function(){tab=t[0];main.scrollTop=0;draw()}}},[h('span',{innerHTML:ICON[t[0]],style:'display:flex'}),t[2]]));
+ });
+ main.scrollTop=y;
+}
+applyTheme();draw();save();
+})();
+</script>
+</body>
+</html>
